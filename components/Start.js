@@ -9,6 +9,8 @@ import {
 	Image,
 	TouchableOpacity,
 	Pressable,
+	Platform,
+	KeyboardAvoidingView,
 } from 'react-native';
 
 import Bg from '../assets/BackgroundImage.png';
@@ -95,6 +97,8 @@ export default class Start extends Component {
 						</Pressable>
 					</View>
 				</ImageBackground>
+				{/* If the platform is android, add component so keyboard does not block user's view */}
+				{Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null}
 			</View>
 		);
 	}
