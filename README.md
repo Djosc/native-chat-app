@@ -5,7 +5,7 @@ This application is a simple chat app built with React-Native, Expo, Gifted-Chat
 It allows users to enter their name, select their theme color, and send messages/images/videos in a responsive chat environment.
 
 # Installation
-Clone the repository and run `npm install` to install all necessary dependencies.
+Clone the repository and run `npm install` from within the project's root directory to install all necessary dependencies.
 
 This app requires the Expo-Cli to run a development server.
   - From within the terminal: `npm i -g expo-cli`
