@@ -18,6 +18,7 @@ export default class Chat extends Component {
 			user: {
 				_id: '',
 				name: '',
+				avatar: '',
 			},
 			isConnected: false,
 		};
@@ -69,6 +70,7 @@ export default class Chat extends Component {
 						user: {
 							_id: user.uid,
 							name: name,
+							avatar: 'https://placeimg.com/140/140/any',
 						},
 					});
 
@@ -97,8 +99,10 @@ export default class Chat extends Component {
 	}
 
 	componentWillUnmount() {
-		this.authUnsubscribe();
-		this.unsubscribe();
+		if (this.state.isConnected) {
+			this.authUnsubscribe();
+			this.unsubscribe();
+		}
 	}
 
 	onCollectionUpdate = (querySnapshot) => {
@@ -114,6 +118,7 @@ export default class Chat extends Component {
 				user: {
 					_id: data.user._id,
 					name: data.user.name,
+					avatar: data.user.avatar,
 				},
 			});
 		});
@@ -121,6 +126,7 @@ export default class Chat extends Component {
 		this.setState({
 			messages,
 		});
+		this.saveMessages();
 	};
 
 	// Add new messages to the firebase collection
@@ -133,6 +139,7 @@ export default class Chat extends Component {
 			user: {
 				_id: this.state.user._id,
 				name: this.state.user.name,
+				avatar: this.state.user.avatar,
 			},
 		});
 	}
@@ -218,6 +225,7 @@ export default class Chat extends Component {
 					user={{
 						_id: this.state.user._id,
 						name: this.state.name,
+						avatar: this.state.user.avatar,
 					}}
 				/>
 				{/* If the platform is android, add component so keyboard does not block user's view */}
