@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, Button, Platform, KeyboardAvoidingView } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
+import MapView from 'react-native-maps';
+
+import CustomActions from './CustomActions';
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
@@ -21,6 +24,8 @@ export default class Chat extends Component {
 				avatar: '',
 			},
 			isConnected: false,
+			image: null,
+			location: null,
 		};
 
 		const firebaseConfig = {
@@ -120,6 +125,8 @@ export default class Chat extends Component {
 					name: data.user.name,
 					avatar: data.user.avatar,
 				},
+				image: data.image || null,
+				location: data.location || null,
 			});
 		});
 		// update the component state with the new messages array
@@ -134,13 +141,15 @@ export default class Chat extends Component {
 		const message = this.state.messages[0];
 		this.referenceChatMessages.add({
 			_id: message._id,
-			text: message.text,
+			text: message.text || '',
 			createdAt: message.createdAt,
 			user: {
 				_id: this.state.user._id,
 				name: this.state.user.name,
 				avatar: this.state.user.avatar,
 			},
+			image: message.image || null,
+			location: message.location || null,
 		});
 	}
 
@@ -209,6 +218,28 @@ export default class Chat extends Component {
 		}
 	}
 
+	renderCustomActions = (props) => {
+		return <CustomActions {...props} />;
+	};
+
+	renderCustomView(props) {
+		const { currentMessage } = props;
+		if (currentMessage.location) {
+			return (
+				<MapView
+					style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+					region={{
+						latitude: currentMessage.location.latitude,
+						longitude: currentMessage.location.longitude,
+						latitudeDelta: 0.0922,
+						longitudeDelta: 0.0421,
+					}}
+				/>
+			);
+		}
+		return null;
+	}
+
 	render() {
 		// Get name and bg color from the route parameters to be used in this component
 		this.props.navigation.setOptions({ title: name });
@@ -220,6 +251,8 @@ export default class Chat extends Component {
 				<GiftedChat
 					renderBubble={this.renderBubble.bind(this)}
 					renderInputToolbar={this.renderInputToolbar.bind(this)}
+					renderActions={this.renderCustomActions}
+					renderCustomView={this.renderCustomView}
 					messages={this.state.messages}
 					onSend={(messages) => this.onSend(messages)}
 					user={{
