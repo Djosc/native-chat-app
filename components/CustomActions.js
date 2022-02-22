@@ -28,6 +28,7 @@ class CustomActions extends Component {
 		}
 	};
 
+	// Get permission to open user's camera, then send imageUrl to the upload function
 	takePhoto = async () => {
 		const permission = ImagePicker.getCameraPermissionsAsync();
 		try {
@@ -45,6 +46,7 @@ class CustomActions extends Component {
 		}
 	};
 
+	// Get permission to get user's current location, then send it with onSend
 	getLocation = async () => {
 		try {
 			const { status } = await Location.requestForegroundPermissionsAsync();
@@ -67,6 +69,7 @@ class CustomActions extends Component {
 		}
 	};
 
+	// Convert images to blob and upload to firebase storage
 	uploadImageFetch = async (uri) => {
 		const blob = await new Promise((res, rej) => {
 			const xhr = new XMLHttpRequest();
